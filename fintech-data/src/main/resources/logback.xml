@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 定义 每隔10秒中扫描该文件 -->
+<configuration scan="true" scanPeriod="10 seconds" debug="false">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <jmxConfigurator/>
+    
+    <!--日志输出目录-->
+    <property name="LOG_HOME" value="/home/jyapp/microservice_logs/fintech-data"/>
+    
+    <!-- 控制台输出 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 文件输出 -->
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	    	<FileNamePattern>${LOG_HOME}/fintech-data_${HOSTNAME}_%d{yyyy-MM-dd}.log</FileNamePattern>
+	        <!-- 日志大小 -->
+	        <!--  <maxFileSize>20MB</maxFileSize> -->
+	    </rollingPolicy>
+	    <encoder>
+	        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+	    </encoder>
+	</appender>
+    
+    <!-- ELK appender -->
+    <!-- 
+	<appender name="ELKAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	            <FileNamePattern> /home/jyapp/elk_microservice_info_logs/微服务名_info_${HOSTNAME}_%d{yyyy-MM-dd}.log </FileNamePattern>
+	    </rollingPolicy>
+	
+	    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+	        <providers>
+	        <pattern>
+	            <pattern>
+	            {"service_id": "微服务名", "log_time": "%date{\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"}", "thread": "%thread", "level": "%level",  "logger": "%logger", "msg": "%message", "stack_trace": "%exception"}
+	            </pattern>
+	        </pattern>
+	        </providers>
+	    </encoder>
+	</appender>
+	-->
+
+
+    <!-- sql 的日志输出设置 -->
+    <logger name="java.sql.Connection" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </logger>
+    <logger name="java.sql.Statement" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </logger>
+    <logger name="java.sql.PreparedStatement" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </logger>
+    <logger name="org.springframework.context" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </logger>
+    <logger name="org.apache.ibatis" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </logger>
+
+    <logger name="com.fintech" level="DEBUG" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </logger>
+
+	<logger name="org.springframework.scheduling.quartz" level="WARN" />
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <!-- <appender-ref ref="ELKAppender" /> -->
+    </root>
+</configuration>

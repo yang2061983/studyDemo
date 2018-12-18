@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fintech.admin.modules.sys.dao.SysRoleDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.fintech.admin.modules.sys.entity.SysRoleEntity" id="roleMap">
+        <result property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="remark" column="remark"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!-- 公共字段 -->
+    <sql id="roleColumn">
+        a.role_id,
+        a.role_name,
+        a.remark,
+        a.dept_id,
+        a.create_time
+    </sql>
+
+    <!--根据部门id查询角色-->
+    <select id="queryRolesByDeptId" parameterType="java.util.Map" resultMap="roleMap">
+        SELECT <include refid="roleColumn"/> FROM sys_role a
+        <where>
+            <if test="deptId!=null and deptId!=''">
+                AND a.dept_id = #{deptId}
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                AND a.role_name like concat('%',#{roleName},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <!--根据部门id查询角色-->
+    <select id="queryList" parameterType="java.util.Map" resultMap="roleMap">
+        SELECT <include refid="roleColumn"/>,b.name AS deptName FROM sys_role a left join sys_dept b on a.dept_id = b.dept_id
+        <where>
+            <if test="deptId!=null and deptId!=''">
+                AND a.dept_id = #{deptId}
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                AND a.role_name like concat('%',#{roleName},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

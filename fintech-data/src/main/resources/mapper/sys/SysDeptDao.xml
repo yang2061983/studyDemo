@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fintech.admin.modules.sys.dao.SysDeptDao">
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="com.fintech.admin.modules.sys.entity.SysDeptEntity" id="deptMap">
+		<result property="deptId" column="dept_id"/>
+		<result property="parentId" column="parent_id"/>
+		<result property="name" column="name"/>
+		<result property="orderNum" column="order_num"/>
+		<result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+	<!-- 公共字段 -->
+	<sql id="deptColumn">
+		a.dept_id,
+		a.parent_id,
+		a.order_num,
+		a.name,
+		a.del_flag
+	</sql>
+
+	<select id="queryDetpIdList" resultType="long">
+		select dept_id from sys_dept where parent_id = #{value} and del_flag = 0
+	</select>
+
+	<!--如果不是超级管理员，新增管理员的时候，部门只能查询到自身的部门-->
+	<select id="queryYourSelfDept" resultMap="deptMap" parameterType="java.util.Map">
+		select <include refid="deptColumn"/> from sys_dept a
+		<where>
+			<if test="deptId!=null and deptId!=''">
+				AND a.dept_id = #{deptId}
+			</if>
+		</where>
+	</select>
+</mapper>
