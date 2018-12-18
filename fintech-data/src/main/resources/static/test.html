@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>部门管理</title>
+</head>
+<body>
+sssssssssssssssss
+<script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js"></script>
+<script>
+$(function () {
+  alert($(".form-control").val());
+  $.getJSON("localhost:8080/sys/config/delete",{"id":"99999"},function(result){
+                 if(result.code ==0 ){
+                    alert('操作成功');
+                 }
+             });
+  		$.ajax({
+					type: "POST",
+				    url: "localhost:8080/sys/config/delete",
+                    contentType: "application/json",
+				    data: '99999',
+				    success: function(r){
+						if(r.code == 0){
+							alert('操作成功', function(index){
+								vm.reload();
+							});
+						}else{
+							alert(r.msg);
+						}
+					}
+				});
+});
+</script>
+  <input type="text" class="form-control" value="5555555555"/>
+</body>
+</html>
